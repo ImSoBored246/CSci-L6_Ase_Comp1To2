@@ -53,6 +53,7 @@
         btn_syn.TabIndex = 1;
         btn_syn.Text = "Check Syntax";
         btn_syn.UseVisualStyleBackColor = true;
+        btn_syn.Click += btn_syn_Click;
         // 
         // btn_exe
         // 
@@ -62,6 +63,7 @@
         btn_exe.TabIndex = 2;
         btn_exe.Text = "Execute";
         btn_exe.UseVisualStyleBackColor = true;
+        btn_exe.Click += btn_exe_Click;
         // 
         // tb_code
         // 
@@ -80,6 +82,7 @@
         btn_sav.TabIndex = 4;
         btn_sav.Text = "Save";
         btn_sav.UseVisualStyleBackColor = true;
+        btn_sav.Click += btn_sav_Click;
         // 
         // btn_ope
         // 
@@ -89,6 +92,7 @@
         btn_ope.TabIndex = 5;
         btn_ope.Text = "Open";
         btn_ope.UseVisualStyleBackColor = true;
+        btn_ope.Click += btn_ope_Click;
         // 
         // Form1
         // 
