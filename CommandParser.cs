@@ -23,6 +23,8 @@ namespace CSci_L6_Ase_Comp1To2
         {
             ///<summary>Executes the code in the code box. Returns code's text output.</summary>
             ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
+            ///
+            int entityCount = 0;
             string outBuffer = "";
             if (code == null) { throw new ArgumentNullException("No code!"); }
             return outBuffer;
@@ -37,31 +39,36 @@ namespace CSci_L6_Ase_Comp1To2
         
             if (d.ShowDialog() == DialogResult.OK)
             {
-                return new StreamReader(d.FileName).ReadToEnd();
+                StreamReader sr = new StreamReader(d.FileName);
+                string x = sr.ReadToEnd();
+                sr.Close();
+                return x;
             }
             else
-        {
-        throw new IOException("File Dialog failure!");
-        }
+            {
+                throw new IOException("File Dialog failure!");
+            }
         }
 
         public static void SaveFile(string code)
         {
-        ///<summary>Saves current code to external text file.</summary>
-        ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
-        ///<exception cref="IOException">Thrown when saving fails for any reason.</exception>
-        if (code == null) { throw new ArgumentNullException("No code!"); }
-        FileDialog d = new SaveFileDialog();
-        d.Filter = "Drawing Program Code (*.dpc)|*.dpc";
+            ///<summary>Saves current code to external text file.</summary>
+            ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
+            ///<exception cref="IOException">Thrown when saving fails for any reason.</exception>
+            if (code == null) { throw new ArgumentNullException("No code!"); }
+            FileDialog d = new SaveFileDialog();
+            d.Filter = "Drawing Program Code (*.dpc)|*.dpc";
 
-        if (d.ShowDialog() == DialogResult.OK)
-        {
-        new StreamWriter(d.FileName).Write(code);
-        }
-        else
-        {
-        throw new IOException("File Dialog failure!");
-        }
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter sw = new StreamWriter(d.FileName);
+                sw.Write(code);
+                sw.Close();
+            }
+            else
+            {
+                throw new IOException("File Dialog failure!");
+            }
         }
     }
 }
