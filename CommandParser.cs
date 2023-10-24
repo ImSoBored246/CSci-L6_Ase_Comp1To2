@@ -19,14 +19,50 @@ namespace CSci_L6_Ase_Comp1To2
             return "Syntax OK!";
         }
 
-        public static string Execute(string code)
+        public static string Execute(string code, Form1 form)
         {
             ///<summary>Executes the code in the code box. Returns code's text output.</summary>
             ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
             ///
             int entityCount = 0;
+            int[] init_loc = { 10, 10 };
+            int[] cursor_loc = { 10, 10 };
             string outBuffer = "";
+            bool fill = false;
+            int iter = 0;
             if (code == null) { throw new ArgumentNullException("No code!"); }
+            string[] runtime_exec_code = code.Split("\n");
+            while (runtime_exec_code.Length > iter)
+            {
+                if (runtime_exec_code[iter].Substring(0, 5) == "clear")
+                {
+                    DrawFunctions.ClearAllPictureBoxes(entityCount, ref form);
+                } else if (runtime_exec_code[iter].Substring(0, 5) == "reset")
+                {
+                    cursor_loc = init_loc;
+                } else if (runtime_exec_code[iter].Substring(0, 4) == "fill")
+                {
+                    fill = !fill;
+                } else if (runtime_exec_code[iter].Substring(0, 6) == "moveTo")
+                {
+                    string[] vals = runtime_exec_code[iter].Split(" ");
+                    cursor_loc = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+
+                } else if (runtime_exec_code[iter].Substring(0, 6) == "circle")
+                {
+                    int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
+                    ObjectDrawer.DrawCircle(ObjectDrawer.DrawObject(cursor_loc[0], cursor_loc[1], size, size, entityCount), fill);
+                } else if (runtime_exec_code[iter].Substring(0, 4) == "rect")
+                {
+                    string[] vals = runtime_exec_code[iter].Split(" ");
+                    int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+                    ObjectDrawer.DrawRectangle(ObjectDrawer.DrawObject(cursor_loc[0], cursor_loc[1], size[0], size[1], entityCount), fill);
+                } else if (runtime_exec_code[iter].Substring(0, 1) == "moveTo") // todo
+                {
+
+                }
+                iter++;
+            }
             return outBuffer;
         }
 

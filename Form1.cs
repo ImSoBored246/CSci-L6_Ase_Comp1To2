@@ -28,7 +28,7 @@ namespace CSci_L6_Ase_Comp1To2
             ///
             try
             {
-                tb_out.Text = CommandParser.Execute(tb_code.Text);
+                tb_out.Text = CommandParser.Execute(tb_code.Text, this);
             }
             catch (Exception exc)
             {
@@ -69,6 +69,11 @@ namespace CSci_L6_Ase_Comp1To2
             ///<summary>Removes all text from tb_code and tb_out.</summary>
             ///
             tb_out.Text = ""; tb_code.Text = "";
+        }
+
+        private void btn_debug_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

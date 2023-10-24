@@ -34,9 +34,8 @@
             tb_code = new TextBox();
             btn_sav = new Button();
             btn_ope = new Button();
-            pictureBox1 = new PictureBox();
             btn_clr = new Button();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            btn_debug = new Button();
             SuspendLayout();
             // 
             // tb_out
@@ -70,6 +69,8 @@
             // 
             // tb_code
             // 
+            tb_code.AcceptsReturn = true;
+            tb_code.AcceptsTab = true;
             tb_code.Location = new Point(19, 19);
             tb_code.Multiline = true;
             tb_code.Name = "tb_code";
@@ -97,14 +98,6 @@
             btn_ope.UseVisualStyleBackColor = true;
             btn_ope.Click += btn_ope_Click;
             // 
-            // pictureBox1
-            // 
-            pictureBox1.Location = new Point(751, 19);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(426, 426);
-            pictureBox1.TabIndex = 6;
-            pictureBox1.TabStop = false;
-            // 
             // btn_clr
             // 
             btn_clr.Location = new Point(438, 501);
@@ -115,13 +108,23 @@
             btn_clr.UseVisualStyleBackColor = true;
             btn_clr.Click += btn_clr_Click;
             // 
+            // btn_debug
+            // 
+            btn_debug.Location = new Point(543, 501);
+            btn_debug.Name = "btn_debug";
+            btn_debug.Size = new Size(99, 23);
+            btn_debug.TabIndex = 8;
+            btn_debug.Text = "Debug - Circle";
+            btn_debug.UseVisualStyleBackColor = true;
+            btn_debug.Click += btn_debug_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1192, 540);
+            Controls.Add(btn_debug);
             Controls.Add(btn_clr);
-            Controls.Add(pictureBox1);
             Controls.Add(btn_ope);
             Controls.Add(btn_sav);
             Controls.Add(tb_code);
@@ -130,7 +133,6 @@
             Controls.Add(tb_out);
             Name = "Form1";
             Text = "Component TORENAME";
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -143,7 +145,7 @@
         private TextBox tb_code;
         private Button btn_sav;
         private Button btn_ope;
-        private PictureBox pictureBox1;
         private Button btn_clr;
+        private Button btn_debug;
     }
 }
