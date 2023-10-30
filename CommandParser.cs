@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +17,11 @@ namespace CSci_L6_Ase_Comp1To2
         {
             ///<summary>Code to check for errors before run time. Throws exceptions where applicable.</summary>
             ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
-            if (code == null) { throw new ArgumentNullException("No code!"); }
+            if (code == null || code == "") { throw new ArgumentNullException("No code!"); }
             return "Syntax OK!";
         }
 
-        public static string Execute(string code, Form1 form)
+        public static string Execute(string code, DrawProjForm form)
         {
             ///<summary>Executes the code in the code box. Returns code's text output.</summary>
             ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
@@ -28,15 +30,16 @@ namespace CSci_L6_Ase_Comp1To2
             int[] init_loc = { 10, 10 };
             int[] cursor_loc = { 10, 10 };
             string outBuffer = "";
+            SolidBrush br = new SolidBrush(Color.Black);
             bool fill = false;
             int iter = 0;
-            if (code == null) { throw new ArgumentNullException("No code!"); }
+            if (code == null || code == "") { throw new ArgumentNullException("No code!"); }
             string[] runtime_exec_code = code.Split("\n");
             while (runtime_exec_code.Length > iter)
             {
                 if (runtime_exec_code[iter].Substring(0, 5) == "clear")
                 {
-                    DrawFunctions.ClearAllPictureBoxes(entityCount, ref form);
+                    form.clearActiveShapes();
                 } else if (runtime_exec_code[iter].Substring(0, 5) == "reset")
                 {
                     cursor_loc = init_loc;
@@ -51,18 +54,19 @@ namespace CSci_L6_Ase_Comp1To2
                 } else if (runtime_exec_code[iter].Substring(0, 6) == "circle")
                 {
                     int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
-                    ObjectDrawer.DrawCircle(ObjectDrawer.DrawObject(cursor_loc[0], cursor_loc[1], size, size, entityCount), fill);
+                    form.curCmd = "c/" + cursor_loc[0] + "/" + cursor_loc[1] + "/" + size + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
                 } else if (runtime_exec_code[iter].Substring(0, 4) == "rect")
                 {
                     string[] vals = runtime_exec_code[iter].Split(" ");
                     int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
-                    ObjectDrawer.DrawRectangle(ObjectDrawer.DrawObject(cursor_loc[0], cursor_loc[1], size[0], size[1], entityCount), fill);
-                } else if (runtime_exec_code[iter].Substring(0, 1) == "moveTo") // todo
+                    form.curCmd = "r/" + cursor_loc[0] + "/" + cursor_loc[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                } else if (runtime_exec_code[iter].Substring(0, 1) == "line") // todo
                 {
 
                 }
                 iter++;
-            }
+                form.Refresh();
+        }
             return outBuffer;
         }
 

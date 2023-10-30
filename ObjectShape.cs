@@ -6,15 +6,20 @@ using System.Threading.Tasks;
 
 namespace CSci_L6_Ase_Comp1To2
 {
-    internal class ObjectShape
+    public class ObjectShape
     {
-        internal PictureBox pb { get; set; }
-        internal Graphics g { get; set; }
+        internal int[] coords { get; set; }
         internal Brush b { get; set; }
-        public ObjectShape(PictureBox pic, Graphics gra, Brush bru) {
-            pb = pic;
-            g = gra;
+        internal bool f { get; set; }
+        public ObjectShape(int[] crd, Brush bru) {
+            coords = crd;
             b = bru;
+            f = false;
+        }
+        public ObjectShape(int[] crd, Brush bru, bool fill) {
+            coords = crd;
+            b = bru;
+            f = fill;
         }
     }
 }
