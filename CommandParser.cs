@@ -105,7 +105,7 @@ namespace CSci_L6_Ase_Comp1To2
                     x = sr.ReadToEnd();
                     sr.Close();
                 }
-                else { throw new Exception("File Dialog error!"); }
+                else { throw new Exception("File Dialog was aborted. Your file didn't open!"); }
                 return x;
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace CSci_L6_Ase_Comp1To2
                     sw.Write(code);
                     sw.Close();
                 }
-                else { throw new Exception("File Dialog error!"); }
+                else { throw new Exception("File Dialog aborted! Your file has NOT saved!"); }
             }
             catch (Exception ex)
             {
