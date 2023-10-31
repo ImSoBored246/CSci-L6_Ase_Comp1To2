@@ -35,6 +35,7 @@ namespace CSci_L6_Ase_Comp1To2
             int iter = 0;
             if (code == null || code == "") { throw new ArgumentNullException("No code!"); }
             string[] runtime_exec_code = code.Split("\n");
+            runtime_exec_code = TrimWhitespace(runtime_exec_code);
             while (runtime_exec_code.Length > iter)
             {
                 if (runtime_exec_code[iter].Substring(0, 5) == "clear")
@@ -60,9 +61,17 @@ namespace CSci_L6_Ase_Comp1To2
                     string[] vals = runtime_exec_code[iter].Split(" ");
                     int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
                     form.curCmd = "r/" + cursor_loc[0] + "/" + cursor_loc[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
-                } else if (runtime_exec_code[iter].Substring(0, 1) == "line") // todo
+                } else if (runtime_exec_code[iter].Substring(0, 4) == "line") 
                 {
-
+                    //todo
+                }
+                else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
+                {
+                    //todo
+                }
+                else
+                {
+                    throw new ArgumentException($"{runtime_exec_code[iter]} is an invalid command (line {(iter+1).ToString()})");
                 }
                 iter++;
                 form.Refresh();
@@ -70,23 +79,38 @@ namespace CSci_L6_Ase_Comp1To2
             return outBuffer;
         }
 
+        private static string[] TrimWhitespace(string[] program)
+        {
+            ///<summary>Removes unneeded whitespace from program, to allow this.Execute(..) to recognise it. This method should not raise any exceptions.</summary>
+            ///
+            for (int x = 0; x < program.Length; x++)
+            {
+                program[x] = program[x].Trim();
+            }
+            return program;
+        }
+
         public static string OpenFile()
         {
             ///<summary>Executes the code in the code box. Returns code's text output.</summary>
             ///<exception cref="IOException">Thrown when loading fails for any reason.</exception>
             FileDialog d = new OpenFileDialog();
+            string x = "";
             d.Filter = "Drawing Program Code (*.dpc)|*.dpc";
-        
-            if (d.ShowDialog() == DialogResult.OK)
+            try
             {
-                StreamReader sr = new StreamReader(d.FileName);
-                string x = sr.ReadToEnd();
-                sr.Close();
+                if (d.ShowDialog() == DialogResult.OK)
+                {
+                    StreamReader sr = new StreamReader(d.FileName);
+                    x = sr.ReadToEnd();
+                    sr.Close();
+                }
+                else { throw new Exception("File Dialog error!"); }
                 return x;
             }
-            else
+            catch (Exception ex)
             {
-                throw new IOException("File Dialog failure!");
+                throw new IOException($"File Dialog failure! Details:\n{ex}");
             }
         }
 
@@ -98,16 +122,19 @@ namespace CSci_L6_Ase_Comp1To2
             if (code == null) { throw new ArgumentNullException("No code!"); }
             FileDialog d = new SaveFileDialog();
             d.Filter = "Drawing Program Code (*.dpc)|*.dpc";
-
-            if (d.ShowDialog() == DialogResult.OK)
+            try
             {
-                StreamWriter sw = new StreamWriter(d.FileName);
-                sw.Write(code);
-                sw.Close();
+                if (d.ShowDialog() == DialogResult.OK)
+                {
+                    StreamWriter sw = new StreamWriter(d.FileName);
+                    sw.Write(code);
+                    sw.Close();
+                }
+                else { throw new Exception("File Dialog error!"); }
             }
-            else
+            catch (Exception ex)
             {
-                throw new IOException("File Dialog failure!");
+                throw new IOException($"File Dialog failure! Details: \n{ex}");
             }
         }
     }
