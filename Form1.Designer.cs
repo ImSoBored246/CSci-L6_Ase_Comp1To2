@@ -48,7 +48,8 @@
             tb_out.PlaceholderText = "Output";
             tb_out.ReadOnly = true;
             tb_out.Size = new Size(426, 23);
-            tb_out.TabIndex = 0;
+            tb_out.TabIndex = 999;
+            tb_out.TabStop = false;
             // 
             // btn_syn
             // 
@@ -87,7 +88,7 @@
             tb_code.Name = "tb_code";
             tb_code.PlaceholderText = "If you want to execute or save an entire program, use this box and click \"Execute\" or \"Save\"";
             tb_code.Size = new Size(726, 426);
-            tb_code.TabIndex = 3;
+            tb_code.TabIndex = 0;
             // 
             // btn_sav
             // 

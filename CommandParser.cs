@@ -96,7 +96,7 @@ namespace CSci_L6_Ase_Comp1To2
             int[] init_loc = { 10, 10 };
             int[] cursor_loc = { 10, 10 };
             string outBuffer = "";
-            SolidBrush br = new SolidBrush(Color.Black);
+            SolidBrush br = new SolidBrush(Color.White);
             bool fill = false;
             int iter = 0;
             CheckSyntax(code);
@@ -133,7 +133,8 @@ namespace CSci_L6_Ase_Comp1To2
                 }
                 else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
                 {
-                    //todo
+                    int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
+                    form.curCmd = "t/" + cursor_loc[0] + "/" + cursor_loc[1] + "/" + size + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
                 }
                 else
                 {

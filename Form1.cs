@@ -31,7 +31,7 @@ namespace CSci_L6_Ase_Comp1To2
             ///
             try
             {
-                if(CommandParser.CheckSyntax(tb_code.Text)) { tb_out.Text = "Syntax OK!"; }
+                if (CommandParser.CheckSyntax(tb_code.Text)) { tb_out.Text = "Syntax OK!"; }
             }
             catch (Exception exc)
             {
@@ -121,6 +121,12 @@ namespace CSci_L6_Ase_Comp1To2
                 ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[4]), int.Parse(command[5]), b, bool.Parse(command[6]));
                 addShape(shape, "l");
             }
+            else if (command[0] == "t")
+            {
+                SolidBrush b = new SolidBrush(Color.FromArgb(255, int.Parse(command[6]), int.Parse(command[7]), int.Parse(command[8])));
+                ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[3]), int.Parse(command[4]), b, bool.Parse(command[56]));
+                addShape(shape, "t");
+            }
             // draw all shapes
             for (int i = 0; i < activeShapes.Count; i++)
             {
@@ -135,6 +141,10 @@ namespace CSci_L6_Ase_Comp1To2
                 else if (activeTypes[i] == "l")
                 {
                     // do draw line magic
+                }
+                else if (activeTypes[i] == "t")
+                {
+                    ObjectDrawer.DrawTriangle(activeShapes[i], e);
                 }
             }
             curCmd = "x";

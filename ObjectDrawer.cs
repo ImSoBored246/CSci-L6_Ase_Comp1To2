@@ -45,12 +45,25 @@ namespace CSci_L6_Ase_Comp1To2
 
         public static void DrawLine(ObjectShape oShape, PaintEventArgs e)
         {
-            ///<summary>Draw a line connecting the corners of the passed ObjectShape.</summary>
+            e.Graphics.DrawLine(new Pen(oShape.b,1), new Point(oShape.coords[0], oShape.coords[1]), new Point(oShape.coords[0] + oShape.coords[2], oShape.coords[1] + oShape.coords[3]));
+        }
+
+        public static void DrawTriangle(ObjectShape oShape, PaintEventArgs e)
+        {
+            ///<summary>Draw a rectangle of size and location ObjectShape.pb.Bounds. Fill determined by args.</summary>
             ///
-            Pen pen = new Pen(oShape.b);
-            Point p1 = new Point(oShape.coords[0], oShape.coords[1]);
-            Point p2 = new Point(oShape.coords[2], oShape.coords[3]);
-            e.Graphics.DrawLine(pen,p1,p2);
+            Point[] points = new Point[3];
+            points[0] = new Point(oShape.coords[0], oShape.coords[1] + (oShape.coords[3] / 2));
+            points[1] = new Point(oShape.coords[0] + oShape.coords[2], oShape.coords[1]);
+            points[2] = new Point(oShape.coords[0] + oShape.coords[2], oShape.coords[1] + oShape.coords[3]);
+            if (oShape.f)
+            {
+                e.Graphics.FillPolygon(oShape.b, points);
+            }
+            else
+            {
+                e.Graphics.DrawPolygon(new Pen(oShape.b, 1), points);
+            }
         }
     }
 }
