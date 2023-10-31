@@ -31,7 +31,7 @@ namespace CSci_L6_Ase_Comp1To2
             ///
             try
             {
-                tb_out.Text = CommandParser.CheckSyntax(tb_code.Text);
+                if(CommandParser.CheckSyntax(tb_code.Text)) { tb_out.Text = "Syntax OK!"; }
             }
             catch (Exception exc)
             {
