@@ -16,7 +16,9 @@ namespace CSci_L6_Ase_Comp1To2
         public static bool CheckSyntax(string code)
         {
             ///<summary>Code to check for errors before run time. Throws exceptions where applicable.</summary>
-            ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
+            ///<exception cref="ArgumentNullException">Thrown if a null value is somehow passed to the method.</exception>
+            ///<exception cref="ArgumentException">Thrown when no code or invalid parameter values are passed to the method</exception>
+            ///<exception cref="FormatException">Thrown when invalid variable types are passed to the method (ex. 'circle 10.5')</exception>
             if (code == null) { throw new ArgumentNullException("Null received! That shouldn't have happened! Try restarting the program!"); }
             else if (code == "") { throw new ArgumentException("No code!"); }
             int iter = 0;
