@@ -13,17 +13,17 @@ namespace CSci_L6_Ase_Comp1To2
     {
         ///<summary>A class of tools dedicated to checking syntax, code execution, save/load and error handling.</summary>
 
-        public static bool CheckSyntax(string code)
+        public static void CheckSyntax(string code)
         {
             ///<summary>Code to check for errors before run time. Throws exceptions where applicable.</summary>
             ///<exception cref="ArgumentNullException">Thrown if a null value is somehow passed to the method.</exception>
             ///<exception cref="ArgumentException">Thrown when no code or invalid parameter values are passed to the method</exception>
             ///<exception cref="FormatException">Thrown when invalid variable types are passed to the method (ex. 'circle 10.5')</exception>
-            if (code == null) { throw new ArgumentNullException("Null received! That shouldn't have happened! Try restarting the program!"); }
-            else if (code == "") { throw new ArgumentException("No code!"); }
-            int iter = 0;
-            string[] runtime_exec_code = code.Split("\n");
+            if (code == null) { throw new ArgumentNullException("ERR! Null exception. This shouldn't have happened..."); } // to be frank, you shouldn't be getting a null exception during regular use!
+            string[] runtime_exec_code = code.Split("\n");                                                                 // this is just a preventative thing in case I make a mistake
             runtime_exec_code = FormatCode(runtime_exec_code);
+            if (code == "") { throw new ArgumentException("ERR! No code!"); }
+            int iter = 0;
             while (runtime_exec_code.Length > iter)
             {
                 if (runtime_exec_code[iter].Substring(0, 5) == "clear")
@@ -76,23 +76,19 @@ namespace CSci_L6_Ase_Comp1To2
                     int r = 0;
                     try { r = int.Parse(runtime_exec_code[iter].Split(" ")[1]); } 
                     catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR: Triangle command expects integer arg"); }
-                    if (r <= 0) { throw new ArgumentException($"Line {iter + 1} ERR: Circle radius too small."); }
+                    if (r <= 0) { throw new ArgumentException($"Line {iter + 1} ERR: Triangle radius too small."); }
                     iter++; continue;
                 }
                 else
                 {
-                    throw new ArgumentException($"{runtime_exec_code[iter]} is an invalid command (line {iter + 1})");
+                    throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
                 }
             }
-
-
-            return true;
         }
 
         public static string Execute(string code, DrawProjForm form)
         {
-            ///<summary>Executes the code in the code box. Returns code's text output.</summary>
-            ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
+            ///<summary>Executes the code in the code box. Returns code's text output. This method should be incapable of throwing exceptions, as they are handled in CheckSyntax(..).</summary>
             ///
             int entityCount = 0;
             int[] init_loc = { 10, 10 };
@@ -144,7 +140,7 @@ namespace CSci_L6_Ase_Comp1To2
                 }
                 iter++;
                 form.Refresh();
-        }
+            }
             return outBuffer;
         }
 
