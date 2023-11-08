@@ -98,7 +98,10 @@ namespace CSci_L6_Ase_Comp1To2
             SolidBrush br = new SolidBrush(Color.White);
             bool fill = false;
             int iter = 0;
-            CheckSyntax(code);
+            try
+            {
+                CheckSyntax(code);
+            } catch (Exception ex) { MessageBox.Show(ex.Message); }
             string[] runtime_exec_code = code.Split("\n");
             runtime_exec_code = FormatCode(runtime_exec_code);
             while (runtime_exec_code.Length > iter)
@@ -151,11 +154,24 @@ namespace CSci_L6_Ase_Comp1To2
         {
             ///<summary>Removes unneeded whitespace from program and convert to lowercase, to allow this.Execute(..) to recognise it. This method should not raise any exceptions.</summary>
             ///
+            List<string> outBuffer = new List<string>();
             for (int x = 0; x < program.Length; x++)
             {
                 program[x] = program[x].Trim().ToLower();
-            }
-            return program;
+                if (!string.IsNullOrEmpty(program[x])) 
+                {
+                    string[] tempString = program[x].Split(" ");
+                    tempString[0] = tempString[0] + "________________";
+                    program[x] = "";
+                    for (int y = 0; y < tempString.Length; y++)
+                    {
+                        program[x] += tempString[y] + " ";
+                    }
+                    program[x] = program[x].Substring(0, program[x].Length - 1);
+                    outBuffer.Add(program[x]); 
+                }
+                }
+            return outBuffer.ToArray();
         }
 
         public static string OpenFile()

@@ -44,14 +44,14 @@ namespace CSci_L6_Ase_Comp1To2
         {
             ///<summary>Calls CommandParser.Execute. If an exception is returned, will display it to the output box.</summary>
             ///
-            try
-            {
+            //try
+            //{
                 tb_out.Text = CommandParser.Execute(tb_code.Text, this);
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-            }
+            //}
+            //catch (Exception exc)
+            //{
+            //    MessageBox.Show(exc.Message);
+            //}
         }
 
         private void btn_ope_Click(object sender, EventArgs e)
@@ -124,7 +124,7 @@ namespace CSci_L6_Ase_Comp1To2
             else if (command[0] == "t") // triangle
             {
                 SolidBrush b = new SolidBrush(Color.FromArgb(255, int.Parse(command[6]), int.Parse(command[7]), int.Parse(command[8])));
-                ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[3]), int.Parse(command[4]), b, bool.Parse(command[56]));
+                ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[3]), int.Parse(command[4]), b, bool.Parse(command[5]));
                 addShape(shape, "t");
             }
             // draw all shapes
