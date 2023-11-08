@@ -9,11 +9,11 @@ using System.Windows.Forms;
 
 namespace CSci_L6_Ase_Comp1To2
 {
-    internal class CommandParser
+    public class CommandParser
     {
         ///<summary>A class of tools dedicated to checking syntax, code execution, save/load and error handling.</summary>
 
-        public static void CheckSyntax(string code)
+        public static bool CheckSyntax(string code)
         {
             ///<summary>Code to check for errors before run time. Throws exceptions where applicable.</summary>
             ///<exception cref="ArgumentNullException">Thrown if a null value is somehow passed to the method.</exception>
@@ -84,6 +84,7 @@ namespace CSci_L6_Ase_Comp1To2
                     throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
                 }
             }
+            return true;
         }
 
         public static string Execute(string code, DrawProjForm form)
@@ -127,7 +128,9 @@ namespace CSci_L6_Ase_Comp1To2
                     form.curCmd = "r/" + cursor_loc[0] + "/" + cursor_loc[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
                 } else if (runtime_exec_code[iter].Substring(0, 6) == "drawto") 
                 {
-                    //todo
+                    string[] vals = runtime_exec_code[iter].Split(" ");
+                    int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+                    form.curCmd = "l/" + cursor_loc[0] + "/" + cursor_loc[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
                 }
                 else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
                 {
@@ -136,7 +139,7 @@ namespace CSci_L6_Ase_Comp1To2
                 }
                 else
                 {
-                    throw new ArgumentException($"ERR! {runtime_exec_code[iter]} is an invalid command (line {iter + 1})");
+                    throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
                 }
                 iter++;
                 form.Refresh();
@@ -182,9 +185,11 @@ namespace CSci_L6_Ase_Comp1To2
         public static void SaveFile(string code)
         {
             ///<summary>Saves current code to external text file.</summary>
-            ///<exception cref="ArgumentNullException">Thrown if no code is passed to the method.</exception>
+            ///<exception cref="ArgumentNullException">Thrown if null is passed to the method.</exception>
+            ///<exception cref="ArgumentException">Thrown if no code is passed to the method.</exception>
             ///<exception cref="IOException">Thrown when saving fails for any reason.</exception>
-            if (code == null) { throw new ArgumentNullException("No code!"); }
+            if (code == null) { throw new ArgumentNullException("Null passed in!"); }
+            if (code == "") { throw new ArgumentException("No code!"); }
             FileDialog d = new SaveFileDialog();
             d.Filter = "Drawing Program Code (*.dpc)|*.dpc";
             try

@@ -18,6 +18,16 @@ namespace CSci_L6_Ase_Comp1To2
             return new ObjectShape(coords, b, fill);
         }
 
+        public static ObjectShape DrawObject(int[] crdn, int eCnt, Brush b, bool fill)
+        {
+            ///<summary>Override for DrawObject that takes integer array instead of coordinates.</summary>
+            int[] coords = crdn;
+            coords[0] = coords[0] + 751;
+            coords[1] = coords[1] + 19;
+
+            return new ObjectShape(coords, b, fill);
+        }
+
         public static void DrawCircle(ObjectShape oShape, PaintEventArgs e)
         {
             ///<summary>Draw an elipsis at [xPos,yPos] with size [xSiz,ySiz]. CommandParser will ensure xSiz==ySiz in case of circle not oval.</summary>

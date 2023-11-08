@@ -103,25 +103,25 @@ namespace CSci_L6_Ase_Comp1To2
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             string[] command = curCmd.Split("/");
-            if (command[0] == "c")
+            if (command[0] == "c") // circle
             {
                 SolidBrush b = new SolidBrush(Color.FromArgb(255, int.Parse(command[6]), int.Parse(command[7]), int.Parse(command[8])));
                 ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[3]), int.Parse(command[4]), b, bool.Parse(command[5]));
                 addShape(shape, "c");
             }
-            else if (command[0] == "r")
+            else if (command[0] == "r") // rectangle
             {
                 SolidBrush b = new SolidBrush(Color.FromArgb(255, int.Parse(command[7]), int.Parse(command[8]), int.Parse(command[9])));
                 ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[4]), int.Parse(command[5]), b, bool.Parse(command[6]));
                 addShape(shape, "r");
             }
-            else if (command[0] == "l")
+            else if (command[0] == "l") // line
             {
                 SolidBrush b = new SolidBrush(Color.FromArgb(255, int.Parse(command[7]), int.Parse(command[8]), int.Parse(command[9])));
                 ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[4]), int.Parse(command[5]), b, bool.Parse(command[6]));
                 addShape(shape, "l");
             }
-            else if (command[0] == "t")
+            else if (command[0] == "t") // triangle
             {
                 SolidBrush b = new SolidBrush(Color.FromArgb(255, int.Parse(command[6]), int.Parse(command[7]), int.Parse(command[8])));
                 ObjectShape shape = ObjectDrawer.DrawObject(int.Parse(command[1]), int.Parse(command[2]), int.Parse(command[3]), int.Parse(command[3]), int.Parse(command[4]), b, bool.Parse(command[56]));
@@ -140,7 +140,7 @@ namespace CSci_L6_Ase_Comp1To2
                 }
                 else if (activeTypes[i] == "l")
                 {
-                    // do draw line magic
+                    ObjectDrawer.DrawLine(activeShapes[i], e);
                 }
                 else if (activeTypes[i] == "t")
                 {
