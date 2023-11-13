@@ -81,7 +81,7 @@ namespace TestProject1
             }
             else if (iterable[iter].Substring(0, 5) == "reset")
             {
-            cursor_loc = init_loc; log += $"RESET - COORDS NOW {cursor_loc}\n";
+            cursor_loc = init_loc; log += $"RESET - COORDS NOW [{cursor_loc[0]},{cursor_loc[1]}]\n";
             }
             else if (iterable[iter].Substring(0, 4) == "fill")
             {
