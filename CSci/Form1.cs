@@ -15,12 +15,16 @@ namespace CSci_L6_Ase_Comp1To2
 
         public void clearActiveShapes()
         {
+        ///<summary>Clears all shapes from the form.</summary>
+        ///
             activeShapes.Clear();
             activeTypes.Clear();
         }
 
         public void addShape(ObjectShape o, string t)
-        {
+        { 
+        ///<summary>Adds shape to the form.</summary>
+        ///
             activeShapes.Add(o);
             activeTypes.Add(t);
         }
@@ -51,7 +55,7 @@ namespace CSci_L6_Ase_Comp1To2
             //catch (Exception exc)
             //{
             //    MessageBox.Show(exc.Message);
-            //}
+            //}         //commented out section was to allow bad code to execute and error out, allowing easier debugging. 
         }
 
         private void btn_ope_Click(object sender, EventArgs e)
@@ -83,6 +87,8 @@ namespace CSci_L6_Ase_Comp1To2
         }
         private void btn_exeO_Click(object sender, EventArgs e)
         {
+        ///<summary>Executes the line of code in the one-line code box.</summary>
+        ///
             try
             {
                 tb_out.Text = CommandParser.Execute(tb_olc.Text, this);
@@ -102,6 +108,8 @@ namespace CSci_L6_Ase_Comp1To2
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+        ///<summary>Handles graphical events (including the creation and rendering of shapes).</summary>
+        ///
             string[] command = curCmd.Split("/");
             if (command[0] == "c") // circle
             {

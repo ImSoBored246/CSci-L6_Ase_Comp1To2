@@ -165,7 +165,7 @@ namespace CSci_L6_Ase_Comp1To2
             return outBuffer;
         }
 
-        private static string[] FormatCode(string[] program)
+        public static string[] FormatCode(string[] program)
         {
             ///<summary>Removes unneeded whitespace from program and convert to lowercase, to allow this.Execute(..) to recognise it. This method should not raise any exceptions.</summary>
             ///
@@ -192,7 +192,7 @@ namespace CSci_L6_Ase_Comp1To2
         public static string OpenFile()
         {
             ///<summary>Executes the code in the code box. Returns code's text output.</summary>
-            ///<exception cref="IOException">Thrown when loading fails for any reason.</exception>
+            ///<exception cref="IOException">Thrown when reading fails for any reason.</exception>
             FileDialog d = new OpenFileDialog();
             string x = "";
             d.Filter = "Drawing Program Code (*.dpc)|*.dpc";

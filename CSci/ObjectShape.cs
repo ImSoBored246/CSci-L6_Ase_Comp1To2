@@ -8,15 +8,12 @@ namespace CSci_L6_Ase_Comp1To2
 {
     public class ObjectShape
     {
-        internal int[] coords { get; set; }
-        internal Brush b { get; set; }
-        internal bool f { get; set; }
-        public ObjectShape(int[] crd, Brush bru) {
-            coords = crd;
-            b = bru;
-            f = false;
-        }
-        public ObjectShape(int[] crd, Brush bru, bool fill) {
+    /// <summary>Information storage class. Stores fill state, coordinates and brush(colour)</summary>
+    ///
+        public int[] coords { get; set; }
+        public SolidBrush b { get; set; }
+        public bool f { get; set; }
+        public ObjectShape(int[] crd, SolidBrush bru, bool fill = false) {
             coords = crd;
             b = bru;
             f = fill;

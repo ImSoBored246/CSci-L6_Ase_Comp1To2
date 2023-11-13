@@ -117,6 +117,23 @@ namespace T_CSci_L6_Ase_Comp1To2
         try { CommandParser.CheckSyntax(test_code[12]); Assert.Fail("No exception, test 12"); }
         catch (ArgumentException ex) { Assert.AreEqual("Line 1 ERR! Pen colour needs one argument", ex.Message); }
         }
+
+        [TestMethod]
+        public void CP_Ok_GoodCode() {
+        ///<summary>Tests if D_CommandParser.Execute(..) produces working results. See D_CommandParser.Execute(..) for details. 
+        ///         As exceptions are thrown on any errors, no exceptions means success. Temporarily saves logs in a hard-coded directory, to allow me to better analyze results</summary>
+        string[] programs = {
+            "drawto 50 100\ncircle 60\nrectangle 100 20\nfill\nmoveto 60 200\ntriangle 50\npen green\ndrawto 10 10\nreset", // all tests ensure all commands executed. order was random.
+            "drawto 50 100\ncircle 60\nrectangle 100 20\nclear\nfill\nmoveto 60 200\ntriangle 50\npen green\ndrawto 10 10\nreset", // to test if clear works
+            "drawto 50 100\ncircle 60\nrectangle 100 20\nfill\nmoveto 60 200\ntriangle 50\npen green\ndrawto 10 10", // secondary clear test, also tests if not resetting works
+            };
+            for (int x = 0; x < programs.Length; x++) {
+                StreamWriter sw = new StreamWriter($"G:/logs/log_{x}.txt");
+                string log = D_CommandParser.Execute(programs[x]);
+                try { sw.Write(log); }
+                finally { sw.Close(); }
+            }
+        }
     }
     [TestClass]
     public class TCommandParser_Io

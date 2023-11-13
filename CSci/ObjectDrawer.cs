@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CSci_L6_Ase_Comp1To2
 {
-    class ObjectDrawer
+    public class ObjectDrawer
     {
         ///<summary>Class for drawing objects. Provides the code that actually creates the object and places it with appropriate offset</summary>
         ///
-        public static ObjectShape DrawObject(int xPos, int yPos, int xSiz, int ySiz, int eCnt, Brush b, bool fill)
+        public static ObjectShape DrawObject(int xPos, int yPos, int xSiz, int ySiz, int eCnt, SolidBrush b, bool fill)
         {
             ///<summary>Base method for creating ObjectShapes. Used to create more useful shapes.</summary>
             int[] coords = new int[4] { xPos + 751, yPos + 19, xSiz, ySiz };
@@ -18,9 +18,9 @@ namespace CSci_L6_Ase_Comp1To2
             return new ObjectShape(coords, b, fill);
         }
 
-        public static ObjectShape DrawObject(int[] crdn, int eCnt, Brush b, bool fill)
+        public static ObjectShape DrawObject(int[] crdn, int eCnt, SolidBrush b, bool fill)
         {
-            ///<summary>Override for DrawObject that takes integer array instead of coordinates.</summary>
+            ///<summary>Override for DrawObject that takes integer array instead of coordinates. To be used for undefined polygons.</summary>
             int[] coords = crdn;
             coords[0] = coords[0] + 751;
             coords[1] = coords[1] + 19;
@@ -55,6 +55,8 @@ namespace CSci_L6_Ase_Comp1To2
 
         public static void DrawLine(ObjectShape oShape, PaintEventArgs e)
         {
+        ///<summary>Draws a line connecting coords[0,1] and coords[0+2,1+3].</summary>
+        ///
             e.Graphics.DrawLine(new Pen(oShape.b,1), new Point(oShape.coords[0], oShape.coords[1]), new Point(oShape.coords[0] + oShape.coords[2], oShape.coords[1] + oShape.coords[3]));
         }
 
