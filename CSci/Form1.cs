@@ -46,16 +46,16 @@ namespace CSci_L6_Ase_Comp1To2
 
         private void btn_exe_Click(object sender, EventArgs e)
         {
-            ///<summary>Calls CommandParser.Execute. If an exception is returned, will display it to the output box.</summary>
-            ///
-            //try
-            //{
-                tb_out.Text = CommandParser.Execute(tb_code.Text, this);
-            //}
-            //catch (Exception exc)
-            //{
-            //    MessageBox.Show(exc.Message);
-            //}         //commented out section was to allow bad code to execute and error out, allowing easier debugging. 
+        ///<summary>Calls CommandParser.Execute. If an exception is returned, will display it to the output box.</summary>
+        ///
+        try
+        {
+        tb_out.Text = CommandParser.Execute(tb_code.Text, this);
+        }
+        catch (Exception exc)
+        {
+        MessageBox.Show(exc.Message);
+        }         //commented out section was to allow bad code to execute and error out, allowing easier debugging. 
         }
 
         private void btn_ope_Click(object sender, EventArgs e)
