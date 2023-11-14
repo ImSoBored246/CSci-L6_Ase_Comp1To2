@@ -151,6 +151,7 @@
             tb_olc.PlaceholderText = "If you want to execute a single line of code, type here and use the Execute (One Line) button";
             tb_olc.Size = new Size(727, 23);
             tb_olc.TabIndex = 9;
+            tb_olc.KeyPress += tb_olc_KeyPress;
             // 
             // DrawProjForm
             // 

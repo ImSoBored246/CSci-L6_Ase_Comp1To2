@@ -14,7 +14,7 @@ namespace CSci_L6_Ase_Comp1To2
         {
             ///<summary>Base method for creating ObjectShapes. Used to create more useful shapes.</summary>
             int[] coords = new int[4] { xPos + 751, yPos + 19, xSiz, ySiz };
-            
+
             return new ObjectShape(coords, b, fill);
         }
 
@@ -35,7 +35,8 @@ namespace CSci_L6_Ase_Comp1To2
             if (oShape.f)
             {
                 e.Graphics.FillEllipse(oShape.b, new Rectangle(oShape.coords[0], oShape.coords[1], oShape.coords[2], oShape.coords[3]));
-            } else
+            }
+            else
             {
                 e.Graphics.DrawEllipse(new Pen(oShape.b, 1), new Rectangle(oShape.coords[0], oShape.coords[1], oShape.coords[2], oShape.coords[3]));
             }
@@ -47,7 +48,8 @@ namespace CSci_L6_Ase_Comp1To2
             if (oShape.f)
             {
                 e.Graphics.FillRectangle(oShape.b, new Rectangle(oShape.coords[0], oShape.coords[1], oShape.coords[2], oShape.coords[3]));
-            } else
+            }
+            else
             {
                 e.Graphics.DrawRectangle(new Pen(oShape.b, 1), new Rectangle(oShape.coords[0], oShape.coords[1], oShape.coords[2], oShape.coords[3]));
             }
@@ -55,9 +57,9 @@ namespace CSci_L6_Ase_Comp1To2
 
         public static void DrawLine(ObjectShape oShape, PaintEventArgs e)
         {
-        ///<summary>Draws a line connecting coords[0,1] and coords[0+2,1+3].</summary>
-        ///
-            e.Graphics.DrawLine(new Pen(oShape.b,1), new Point(oShape.coords[0], oShape.coords[1]), new Point(oShape.coords[0] + oShape.coords[2], oShape.coords[1] + oShape.coords[3]));
+            ///<summary>Draws a line connecting coords[0,1] and coords[2,3].</summary>
+            ///
+            e.Graphics.DrawLine(new Pen(oShape.b, 1), new Point(oShape.coords[0], oShape.coords[1]), new Point(oShape.coords[2] + 751, oShape.coords[3] + 19));
         }
 
         public static void DrawTriangle(ObjectShape oShape, PaintEventArgs e)

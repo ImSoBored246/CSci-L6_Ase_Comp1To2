@@ -7,24 +7,26 @@ namespace CSci_L6_Ase_Comp1To2
         public string curCmd { get; set; }
         private List<ObjectShape> activeShapes = new List<ObjectShape>();
         private List<string> activeTypes = new List<string>();
+        public int[] coords = new int[2];
         public DrawProjForm()
         {
             curCmd = "x";
+            coords = new int[] { 10, 10 };
             InitializeComponent();
         }
 
         public void clearActiveShapes()
         {
-        ///<summary>Clears all shapes from the form.</summary>
-        ///
+            ///<summary>Clears all shapes from the form.</summary>
+            ///
             activeShapes.Clear();
             activeTypes.Clear();
         }
 
         public void addShape(ObjectShape o, string t)
-        { 
-        ///<summary>Adds shape to the form.</summary>
-        ///
+        {
+            ///<summary>Adds shape to the form.</summary>
+            ///
             activeShapes.Add(o);
             activeTypes.Add(t);
         }
@@ -46,16 +48,16 @@ namespace CSci_L6_Ase_Comp1To2
 
         private void btn_exe_Click(object sender, EventArgs e)
         {
-        ///<summary>Calls CommandParser.Execute. If an exception is returned, will display it to the output box.</summary>
-        ///
-        try
-        {
-        tb_out.Text = CommandParser.Execute(tb_code.Text, this);
-        }
-        catch (Exception exc)
-        {
-        MessageBox.Show(exc.Message);
-        }         //commented out section was to allow bad code to execute and error out, allowing easier debugging. 
+            ///<summary>Calls CommandParser.Execute. If an exception is returned, will display it to the output box.</summary>
+            ///
+            try
+            {
+                tb_out.Text = CommandParser.Execute(tb_code.Text, this);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }         //commented out section was to allow bad code to execute and error out, allowing easier debugging. 
         }
 
         private void btn_ope_Click(object sender, EventArgs e)
@@ -87,8 +89,8 @@ namespace CSci_L6_Ase_Comp1To2
         }
         private void btn_exeO_Click(object sender, EventArgs e)
         {
-        ///<summary>Executes the line of code in the one-line code box.</summary>
-        ///
+            ///<summary>Executes the line of code in the one-line code box.</summary>
+            ///
             try
             {
                 tb_out.Text = CommandParser.Execute(tb_olc.Text, this);
@@ -108,8 +110,8 @@ namespace CSci_L6_Ase_Comp1To2
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-        ///<summary>Handles graphical events (including the creation and rendering of shapes).</summary>
-        ///
+            ///<summary>Handles graphical events (including the creation and rendering of shapes).</summary>
+            ///
             string[] command = curCmd.Split("/");
             if (command[0] == "c") // circle
             {
@@ -158,5 +160,11 @@ namespace CSci_L6_Ase_Comp1To2
             curCmd = "x";
         }
 
+        private void tb_olc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            ///<summary>Check for return keypress, execute one line</summary>
+            ///
+            if ((Keys)e.KeyChar == Keys.Enter) { btn_exeO.PerformClick(); }
+        }
     }
 }
