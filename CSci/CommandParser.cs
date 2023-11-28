@@ -107,14 +107,17 @@ namespace CSci_L6_Ase_Comp1To2
                 }
                 else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
                 {
-                    int r = 0;
+                    int x = 0; int y = 0;
                     try
                     {
-                        if (runtime_exec_code[iter].Split(" ").Length == 2) { r = int.Parse(runtime_exec_code[iter].Split(" ")[1]); }
+                        if (runtime_exec_code[iter].Split(" ").Length == 3)
+                        {
+                            x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                        }
                         else { throw new FormatException(); }
                     }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Triangle command expects integer arg"); }
-                    if (r <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Triangle size too small."); }
+                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Triangle command expects 2x integer args"); }
+                    if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Side length too small."); }
                     iter++; continue;
                 }
                 else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
@@ -130,9 +133,12 @@ namespace CSci_L6_Ase_Comp1To2
                     }
                     iter++; continue;
                 }
+                else if (runtime_exec_code[iter].Split("=").Length == 2)
+                {
+
+                }
                 else
                 {
-                    runtime_exec_code[iter] = runtime_exec_code[iter].Replace("_", "");
                     throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
                 }
             }
@@ -149,6 +155,7 @@ namespace CSci_L6_Ase_Comp1To2
             SolidBrush br = new SolidBrush(Color.White);
             bool fill = false;
             int iter = 0;
+            List<KeyValuePair<string, int>> usrVars = new List<KeyValuePair<string, int>>();
             if (CheckSyntax(code))
             {
                 string[] runtime_exec_code = code.Split("\n");
@@ -193,8 +200,9 @@ namespace CSci_L6_Ase_Comp1To2
                     }
                     else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
                     {
-                        int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
-                        form.curCmd = "t/" + form.coords[0] + "/" + form.coords[1] + "/" + size + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                        string[] vals = runtime_exec_code[iter].Split(" ");
+                        int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+                        form.curCmd = "t/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
                     }
                     else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
                     {
@@ -210,6 +218,16 @@ namespace CSci_L6_Ase_Comp1To2
                             br.Color = Color.FromArgb(255, int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3]));
                         }
                     }
+                    else if (runtime_exec_code[iter].Split("=").Length == 2)
+                    {
+                        string[] assign = runtime_exec_code[iter].Split("=");
+                        assign[1] = ReplaceVarsWithVals(assign[1], usrVars);
+                        KeyValuePair<string, int> tmp = SearchItem_KVP(usrVars, assign[0]);
+                        if (tmp.Key != "PL") {
+                            usrVars.Remove(tmp);
+                        }
+
+                    }
                     else
                     {
                         throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
@@ -219,6 +237,36 @@ namespace CSci_L6_Ase_Comp1To2
                 }
             }
             return outBuffer;
+        }
+
+        public static string ReplaceVarsWithVals(string line, List<KeyValuePair<string, int>> values)
+        {
+            for (int it = 0; it < values.Count; it++)
+            {
+                line = line.Replace(values[it].Key, values[it].Value.ToString());
+            }
+            return line;
+        }
+
+        internal static KeyValuePair<string, int> SearchItem_KVP(List<KeyValuePair<string, int>> v, string findable)
+        {
+            bool hit = false;
+            KeyValuePair<string,int> rV = new KeyValuePair<string, int>("PL", 0);
+            if (v.Count == 0) { return rV; }
+            foreach (var item in v)
+            {
+                if (item.Key == findable && !hit) { hit = true; rV = item; }
+                else if (hit) { throw new ArgumentException("Variable exists more than once!"); }
+            }
+            return rV;
+        }
+
+        internal static int SolveMathEquations(string equation)
+        {
+            int result = 0;
+            // TODO
+            throw new NotImplementedException("math");
+            return result;
         }
 
         public static string[] FormatCode(string[] program)
