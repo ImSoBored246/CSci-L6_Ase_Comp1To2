@@ -226,6 +226,7 @@ namespace CSci_L6_Ase_Comp1To2
                         if (tmp.Key != "PL") {
                             usrVars.Remove(tmp);
                         }
+                        usrVars.Add(new KeyValuePair<string, int>(usrVars,assign[0]));
 
                     }
                     else
