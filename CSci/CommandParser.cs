@@ -226,7 +226,8 @@ namespace CSci_L6_Ase_Comp1To2
                         if (tmp.Key != "PL") {
                             usrVars.Remove(tmp);
                         }
-                        usrVars.Add(new KeyValuePair<string, int>(usrVars,assign[0]));
+                        int val = SolveMathEquations(assign[1]);
+                        usrVars.Add(new KeyValuePair<string, int>(assign[0],val));
 
                     }
                     else
@@ -264,10 +265,42 @@ namespace CSci_L6_Ase_Comp1To2
 
         internal static int SolveMathEquations(string equation)
         {
-            int result = 0;
-            // TODO
-            throw new NotImplementedException("math");
-            return result;
+            ///<summary>Solves a string equation, returns the value. Supports [+, -, /, *] operators, with left-to-right order.</summary>
+            ///
+            float result = 0;
+            char[] operators = new char[] { '/', '*', '+', '-' };
+            equation = equation.Trim();
+            try { 
+                foreach (var item in equation.Split('/','*','-','+',' '))
+                {
+                    float.Parse(item);
+                }
+            } catch { throw new FormatException($"Invalid equation: {equation}"); }
+            List<float> variables = new List<float>();
+            foreach (var item in equation.Split('/', '*', '-', '+')) { variables.Add(float.Parse(item)); }
+            result = variables[0];
+            int x = 0;
+            for (int i = 0; i < equation.Length; i++)
+            {
+                if (operators.Contains(equation[i]))
+                {
+                    x += 1;
+                    if (equation[i] == '+')
+                    {
+                        result += variables[x];
+                    } else if (equation[i] == '-')
+                    {
+                        result -= variables[x];
+                    } else if (equation[i] == '/')
+                    {
+                        result /= variables[x];
+                    } else if (equation[i] == '*')
+                    {
+                        result *= variables[x];
+                    }
+                }
+            }
+            return (int)result;
         }
 
         public static string[] FormatCode(string[] program)
