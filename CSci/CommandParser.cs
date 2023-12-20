@@ -269,13 +269,18 @@ namespace CSci_L6_Ase_Comp1To2
             ///
             float result = 0;
             char[] operators = new char[] { '/', '*', '+', '-' };
-            equation = equation.Trim();
-            try { 
-                foreach (var item in equation.Split('/','*','-','+',' '))
+            try
+            {
+                bool flag = false;
+                equation = equation.Trim();
+                foreach (var item in equation.Split(new char[] { '/', '*', '-', '+', ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     float.Parse(item);
+                    flag = true;
                 }
-            } catch { throw new FormatException($"Invalid equation: {equation}"); }
+                if (!flag) { throw new Exception(); }
+            }
+            catch { throw new FormatException($"Invalid equation: {equation}"); }
             List<float> variables = new List<float>();
             foreach (var item in equation.Split('/', '*', '-', '+')) { variables.Add(float.Parse(item)); }
             result = variables[0];
@@ -288,13 +293,16 @@ namespace CSci_L6_Ase_Comp1To2
                     if (equation[i] == '+')
                     {
                         result += variables[x];
-                    } else if (equation[i] == '-')
+                    }
+                    else if (equation[i] == '-')
                     {
                         result -= variables[x];
-                    } else if (equation[i] == '/')
+                    }
+                    else if (equation[i] == '/')
                     {
                         result /= variables[x];
-                    } else if (equation[i] == '*')
+                    }
+                    else if (equation[i] == '*')
                     {
                         result *= variables[x];
                     }
