@@ -22,124 +22,142 @@ namespace CSci_L6_Ase_Comp1To2
             if (code == null) { throw new ArgumentNullException("ERR! Null exception. This shouldn't have happened..."); } // to be frank, you shouldn't be getting a null exception during regular use!
             string[] runtime_exec_code = code.Split("\n");                                                                 // this is just a preventative thing in case I make a mistake
             runtime_exec_code = FormatCode(runtime_exec_code);
+            List<KeyValuePair<string, int>> usrVars = new List<KeyValuePair<string, int>>();
             if (code == "") { throw new ArgumentException("ERR! No code!"); }
             int iter = 0;
             while (runtime_exec_code.Length > iter)
             {
-                if (runtime_exec_code[iter].Substring(0, 5) == "clear")
+                if (runtime_exec_code[iter].Split("=").Length == 2)
                 {
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 5) == "reset")
-                {
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 4) == "fill")
-                {
-                    try
+                    string[] assign = runtime_exec_code[iter].Split("=");
+                    assign[0] = assign[0].Replace("_", "");
+                    assign[1] = assign[1].Replace("_", "");
+                    assign[1] = ReplaceVarsWithVals(assign[1], usrVars);
+                    KeyValuePair<string, int> tmp = SearchItem_KVP(usrVars, assign[0]);
+                    if (tmp.Key != "===PL")
                     {
-                        if (runtime_exec_code[iter].Split(" ").Length == 2)
-                        {
-                            if (!(runtime_exec_code[iter].Split(" ")[1] == "on" || runtime_exec_code[iter].Split(" ")[1] == "off")) { throw new FormatException(); }
-                        }
-                        else { throw new FormatException(); }
+                        usrVars.Remove(tmp);
                     }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Fill command expects 'on' or 'off' as second argument!"); }
+                    int val = SolveMathEquations(assign[1]);
+                    usrVars.Add(new KeyValuePair<string, int>(assign[0].Replace("_", ""), val)); // delete excess underscores. NOTE: THIS DISABLES UNDERSCORES IN VAR NAMES!
                     iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 6) == "moveto")
-                {
-                    int x = 0; int y = 0;
-                    try
-                    {
-                        if (runtime_exec_code[iter].Split(" ").Length == 3)
-                        {
-                            x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
-                        }
-                        else { throw new FormatException(); }
-                    }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! MoveTo command expects 2x integer args"); }
-                    if (x < 10 || y < 10 || x > 476 || y > 445) { throw new ArgumentException($"Line {iter + 1} ERR! Canvas size is (10,10) to (476, 445)."); }
-                    iter++; continue;
-
-                }
-                else if (runtime_exec_code[iter].Substring(0, 6) == "circle")
-                {
-                    int r = 0;
-                    try
-                    {
-                        if (runtime_exec_code[iter].Split(" ").Length == 2) { r = int.Parse(runtime_exec_code[iter].Split(" ")[1]); }
-                        else { throw new FormatException(); }
-                    }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Circle command expects integer arg"); }
-                    if (r <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Circle radius too small."); }
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 4) == "rect" || runtime_exec_code[iter].Substring(0, 9) == "rectangle")
-                {
-                    int x = 0; int y = 0;
-                    try
-                    {
-                        if (runtime_exec_code[iter].Split(" ").Length == 3)
-                        {
-                            x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
-                        }
-                        else { throw new FormatException(); }
-                    }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Rectangle command expects 2x integer args"); }
-                    if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Side length too small."); }
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 6) == "drawto")
-                {
-                    int x = 0; int y = 0;
-                    try
-                    {
-                        if (runtime_exec_code[iter].Split(" ").Length == 3)
-                        {
-                            x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
-                        }
-                        else { throw new FormatException(); }
-                    }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! DrawTo command expects 2x integer args"); }
-                    if (x < 10 || y < 10 || x > 476 || y > 445) { throw new ArgumentException($"Line {iter + 1} ERR! Canvas size is (10,10) to (476, 445)."); }
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
-                {
-                    int x = 0; int y = 0;
-                    try
-                    {
-                        if (runtime_exec_code[iter].Split(" ").Length == 3)
-                        {
-                            x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
-                        }
-                        else { throw new FormatException(); }
-                    }
-                    catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Triangle command expects 2x integer args"); }
-                    if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Side length too small."); }
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
-                {
-                    string[] col = runtime_exec_code[iter].Split(" ");
-                    if (!(col.Length == 2 || col.Length == 4)) { throw new ArgumentException($"Line {iter + 1} ERR! Pen colour needs one word or three integers"); }
-                    else
-                    {
-                        try { int.Parse(col[1]); int.Parse(col[2]); int.Parse(col[3]); } catch (FormatException) {
-                            if (col[1] != "red" && col[1] != "green" && col[1] != "blue" && col[1] != "white")
-                            { throw new ArgumentException($"Line {iter + 1} ERR! Invalid colour chosen"); }
-                        }
-                    }
-                    iter++; continue;
-                }
-                else if (runtime_exec_code[iter].Split("=").Length == 2)
-                {
-
                 }
                 else
                 {
-                    throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
+                    runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
+                    if (runtime_exec_code[iter].Substring(0, 5) == "clear")
+                    {
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 5) == "reset")
+                    {
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 4) == "fill")
+                    {
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 2)
+                            {
+                                if (!(runtime_exec_code[iter].Split(" ")[1] == "on" || runtime_exec_code[iter].Split(" ")[1] == "off")) { throw new FormatException(); }
+                            }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Fill command expects 'on' or 'off' as second argument!"); }
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 6) == "moveto")
+                    {
+                        int x = 0; int y = 0;
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 3)
+                            {
+                                x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                            }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! MoveTo command expects 2x integer args"); }
+                        if (x < 10 || y < 10 || x > 476 || y > 445) { throw new ArgumentException($"Line {iter + 1} ERR! Canvas size is (10,10) to (476, 445)."); }
+                        iter++; continue;
+
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 6) == "circle")
+                    {
+                        int r = 0;
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 2) { r = int.Parse(runtime_exec_code[iter].Split(" ")[1]); }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Circle command expects integer arg"); }
+                        if (r <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Circle radius too small."); }
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 4) == "rect" || runtime_exec_code[iter].Substring(0, 9) == "rectangle")
+                    {
+                        int x = 0; int y = 0;
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 3)
+                            {
+                                x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                            }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Rectangle command expects 2x integer args"); }
+                        if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Side length too small."); }
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 6) == "drawto")
+                    {
+                        int x = 0; int y = 0;
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 3)
+                            {
+                                x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                            }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! DrawTo command expects 2x integer args"); }
+                        if (x < 10 || y < 10 || x > 476 || y > 445) { throw new ArgumentException($"Line {iter + 1} ERR! Canvas size is (10,10) to (476, 445)."); }
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
+                    {
+                        int x = 0; int y = 0;
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 3)
+                            {
+                                x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                            }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Triangle command expects 2x integer args"); }
+                        if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Side length too small."); }
+                        iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
+                    {
+                        string[] col = runtime_exec_code[iter].Split(" ");
+                        if (!(col.Length == 2 || col.Length == 4)) { throw new ArgumentException($"Line {iter + 1} ERR! Pen colour needs one word or three integers"); }
+                        else
+                        {
+                            try { int.Parse(col[1]); int.Parse(col[2]); int.Parse(col[3]); }
+                            catch (FormatException)
+                            {
+                                if (col[1] != "red" && col[1] != "green" && col[1] != "blue" && col[1] != "white")
+                                { throw new ArgumentException($"Line {iter + 1} ERR! Invalid colour chosen"); }
+                            }
+                        }
+                        iter++; continue;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
+                    }
                 }
             }
             return true;
@@ -162,77 +180,85 @@ namespace CSci_L6_Ase_Comp1To2
                 runtime_exec_code = FormatCode(runtime_exec_code);
                 while (runtime_exec_code.Length > iter)
                 {
-                    if (runtime_exec_code[iter].Substring(0, 5) == "clear")
-                    {
-                        form.clearActiveShapes();
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 5) == "reset")
-                    {
-                        form.coords = init_loc;
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 4) == "fill")
-                    {
-                        if (runtime_exec_code[iter].Split(" ")[1] == "on") { fill = true; }
-                        else { fill = false; }
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 6) == "moveto")
-                    {
-                        string[] vals = runtime_exec_code[iter].Split(" ");
-                        form.coords = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
-
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 6) == "circle")
-                    {
-                        int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
-                        form.curCmd = "c/" + form.coords[0] + "/" + form.coords[1] + "/" + size + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 4) == "rect" || runtime_exec_code[iter].Substring(0, 9) == "rectangle")
-                    {
-                        string[] vals = runtime_exec_code[iter].Split(" ");
-                        int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
-                        form.curCmd = "r/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 6) == "drawto")
-                    {
-                        string[] vals = runtime_exec_code[iter].Split(" ");
-                        int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
-                        form.curCmd = "l/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
-                    {
-                        string[] vals = runtime_exec_code[iter].Split(" ");
-                        int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
-                        form.curCmd = "t/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
-                    }
-                    else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
-                    {
-                        string[] col = runtime_exec_code[iter].Split(" ");
-                        if (runtime_exec_code[iter].Split(" ").Length == 2)
-                        {
-                            if (col[1] == "red") { br.Color = Color.FromArgb(255, 255, 0, 0); }
-                            else if (col[1] == "green") { br.Color = Color.FromArgb(255, 0, 255, 0); }
-                            else if (col[1] == "blue") { br.Color = Color.FromArgb(255, 0, 0, 255); }
-                            else if (col[1] == "white") { br.Color = Color.FromArgb(255, 255, 255, 255); }
-                        } else
-                        {
-                            br.Color = Color.FromArgb(255, int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3]));
-                        }
-                    }
-                    else if (runtime_exec_code[iter].Split("=").Length == 2)
+                    if (runtime_exec_code[iter].Split("=").Length == 2)
                     {
                         string[] assign = runtime_exec_code[iter].Split("=");
+                        assign[0] = assign[0].Replace("_", "");
+                        assign[1] = assign[1].Replace("_", "");
                         assign[1] = ReplaceVarsWithVals(assign[1], usrVars);
                         KeyValuePair<string, int> tmp = SearchItem_KVP(usrVars, assign[0]);
-                        if (tmp.Key != "PL") {
+                        if (tmp.Key != "===PL")
+                        {
                             usrVars.Remove(tmp);
                         }
                         int val = SolveMathEquations(assign[1]);
-                        usrVars.Add(new KeyValuePair<string, int>(assign[0],val));
+                        usrVars.Add(new KeyValuePair<string, int>(assign[0].Replace("_", ""), val)); // delete excess underscores. NOTE: THIS DISABLES UNDERSCORES IN VAR NAMES!
 
                     }
                     else
                     {
-                        throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
+                        runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
+                        if (runtime_exec_code[iter].Substring(0, 5) == "clear")
+                        {
+                            form.clearActiveShapes();
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 5) == "reset")
+                        {
+                            form.coords = init_loc;
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 4) == "fill")
+                        {
+                            if (runtime_exec_code[iter].Split(" ")[1] == "on") { fill = true; }
+                            else { fill = false; }
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 6) == "moveto")
+                        {
+                            string[] vals = runtime_exec_code[iter].Split(" ");
+                            form.coords = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 6) == "circle")
+                        {
+                            int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
+                            form.curCmd = "c/" + form.coords[0] + "/" + form.coords[1] + "/" + size + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 4) == "rect" || runtime_exec_code[iter].Substring(0, 9) == "rectangle")
+                        {
+                            string[] vals = runtime_exec_code[iter].Split(" ");
+                            int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+                            form.curCmd = "r/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 6) == "drawto")
+                        {
+                            string[] vals = runtime_exec_code[iter].Split(" ");
+                            int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+                            form.curCmd = "l/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
+                        {
+                            string[] vals = runtime_exec_code[iter].Split(" ");
+                            int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
+                            form.curCmd = "t/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                        }
+                        else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
+                        {
+                            string[] col = runtime_exec_code[iter].Split(" ");
+                            if (runtime_exec_code[iter].Split(" ").Length == 2)
+                            {
+                                if (col[1] == "red") { br.Color = Color.FromArgb(255, 255, 0, 0); }
+                                else if (col[1] == "green") { br.Color = Color.FromArgb(255, 0, 255, 0); }
+                                else if (col[1] == "blue") { br.Color = Color.FromArgb(255, 0, 0, 255); }
+                                else if (col[1] == "white") { br.Color = Color.FromArgb(255, 255, 255, 255); }
+                            }
+                            else
+                            {
+                                br.Color = Color.FromArgb(255, int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3]));
+                            }
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
+                        }
                     }
                     iter++;
                     form.Refresh();
@@ -253,7 +279,7 @@ namespace CSci_L6_Ase_Comp1To2
         internal static KeyValuePair<string, int> SearchItem_KVP(List<KeyValuePair<string, int>> v, string findable)
         {
             bool hit = false;
-            KeyValuePair<string,int> rV = new KeyValuePair<string, int>("PL", 0);
+            KeyValuePair<string,int> rV = new KeyValuePair<string, int>("===PL", 0);
             if (v.Count == 0) { return rV; }
             foreach (var item in v)
             {
@@ -266,6 +292,8 @@ namespace CSci_L6_Ase_Comp1To2
         internal static int SolveMathEquations(string equation)
         {
             ///<summary>Solves a string equation, returns the value. Supports [+, -, /, *] operators, with left-to-right order.</summary>
+            ///<exception cref="FormatException">Invalid equation passed into method</exception>
+            ///<exception cref="ArgumentException">No operators detected in equation</exception>
             ///
             float result = 0;
             char[] operators = new char[] { '/', '*', '+', '-' };
@@ -278,7 +306,7 @@ namespace CSci_L6_Ase_Comp1To2
                     float.Parse(item);
                     flag = true;
                 }
-                if (!flag) { throw new Exception(); }
+                if (!flag) { throw new ArgumentException($"No operators from [{operators}] in equation!"); }
             }
             catch { throw new FormatException($"Invalid equation: {equation}"); }
             List<float> variables = new List<float>();
