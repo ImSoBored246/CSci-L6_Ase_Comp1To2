@@ -44,6 +44,8 @@ namespace CSci_L6_Ase_Comp1To2
                 }
                 else
                 {
+
+                    if (runtime_exec_code[iter].Substring(0, 3) == "END") { iter = runtime_exec_code.Length; continue; }
                     runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
                     if (runtime_exec_code[iter].Substring(0, 5) == "clear")
                     {
@@ -65,6 +67,22 @@ namespace CSci_L6_Ase_Comp1To2
                         }
                         catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Fill command expects 'on' or 'off' as second argument!"); }
                         iter++; continue;
+                    }
+                    else if (runtime_exec_code[iter].Substring(0, 4) == "loop")
+                    {
+                        int x = 0; int y = 0;
+                        try
+                        {
+                            if (runtime_exec_code[iter].Split(" ").Length == 3)
+                            {
+                                x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                            }
+                            else { throw new FormatException(); }
+                        }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Loop command expects 2x integer args"); }
+                        if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Both arguments must be greater than zero!"); }
+                        iter++; continue;
+
                     }
                     else if (runtime_exec_code[iter].Substring(0, 6) == "moveto")
                     {
@@ -173,6 +191,7 @@ namespace CSci_L6_Ase_Comp1To2
             SolidBrush br = new SolidBrush(Color.White);
             bool fill = false;
             int iter = 0;
+            int loop_start = 0; int loop_iter = 0; int loop_curr = 0; int loop_cmds = 0;
             List<KeyValuePair<string, int>> usrVars = new List<KeyValuePair<string, int>>();
             if (CheckSyntax(code))
             {
@@ -180,6 +199,14 @@ namespace CSci_L6_Ase_Comp1To2
                 runtime_exec_code = FormatCode(runtime_exec_code);
                 while (runtime_exec_code.Length > iter)
                 {
+                    if (runtime_exec_code[iter].Substring(0, 3) == "END") { iter = runtime_exec_code.Length; continue; }
+                    if (runtime_exec_code[iter].Substring(0, 4) == "loop")
+                    {
+                        loop_start = iter;
+                        loop_iter = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
+                        loop_cmds = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
+                        loop_curr = loop_cmds;
+                    }
                     if (runtime_exec_code[iter].Split("=").Length == 2)
                     {
                         string[] assign = runtime_exec_code[iter].Split("=");
@@ -197,6 +224,7 @@ namespace CSci_L6_Ase_Comp1To2
                     }
                     else
                     {
+                        string old_rtexc = runtime_exec_code[iter];
                         runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
                         if (runtime_exec_code[iter].Substring(0, 5) == "clear")
                         {
@@ -254,12 +282,23 @@ namespace CSci_L6_Ase_Comp1To2
                             {
                                 br.Color = Color.FromArgb(255, int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3]));
                             }
+                            runtime_exec_code[iter] = old_rtexc;
+                        }
+                    }
+                    if (loop_curr == 0)
+                    {
+                        if (loop_iter > 0)
+                        {
+                            loop_iter--;
+                            loop_curr = loop_cmds - 1;
+                            iter = loop_start;
                         }
                         else
                         {
-                            throw new ArgumentException($"Line {iter + 1} ERR! \"{runtime_exec_code[iter]}\" is an invalid command");
+                            loop_iter = loop_curr = loop_cmds = 0;
                         }
                     }
+                    else { loop_curr--; }
                     iter++;
                     form.Refresh();
                 }
@@ -271,7 +310,7 @@ namespace CSci_L6_Ase_Comp1To2
         {
             for (int it = 0; it < values.Count; it++)
             {
-                line = line.Replace(values[it].Key, values[it].Value.ToString());
+                line = line.Replace(values[it].Key.Trim(), values[it].Value.ToString());
             }
             return line;
         }
@@ -360,6 +399,7 @@ namespace CSci_L6_Ase_Comp1To2
                     outBuffer.Add(program[x]);
                 }
             }
+            outBuffer.Add("END");
             return outBuffer.ToArray();
         }
 
