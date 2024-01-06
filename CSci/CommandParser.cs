@@ -47,7 +47,8 @@ namespace CSci_L6_Ase_Comp1To2
 
                     if (runtime_exec_code[iter].Substring(0, 3) == "END") { iter = runtime_exec_code.Length; continue; }
                     runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
-                    if (runtime_exec_code[iter].Substring(0, 5) == "clear")
+                    if (runtime_exec_code[iter].Substring(0, 2) == "//") { iter++; continue; }
+                    else if (runtime_exec_code[iter].Substring(0, 5) == "clear")
                     {
                         iter++; continue;
                     }
@@ -144,17 +145,14 @@ namespace CSci_L6_Ase_Comp1To2
                     }
                     else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
                     {
-                        int x = 0; int y = 0;
+                        int r = 0;
                         try
                         {
-                            if (runtime_exec_code[iter].Split(" ").Length == 3)
-                            {
-                                x = int.Parse(runtime_exec_code[iter].Split(" ")[1]); y = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
-                            }
+                            if (runtime_exec_code[iter].Split(" ").Length == 2) { r = int.Parse(runtime_exec_code[iter].Split(" ")[1]); }
                             else { throw new FormatException(); }
                         }
-                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Triangle command expects 2x integer args"); }
-                        if (x <= 0 || y <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Side length too small."); }
+                        catch (FormatException) { throw new FormatException($"Line {iter + 1} ERR! Triangle command expects integer arg"); }
+                        if (r <= 0) { throw new ArgumentException($"Line {iter + 1} ERR! Triangle radius too small."); }
                         iter++; continue;
                     }
                     else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
@@ -202,10 +200,14 @@ namespace CSci_L6_Ase_Comp1To2
                     if (runtime_exec_code[iter].Substring(0, 3) == "END") { iter = runtime_exec_code.Length; continue; }
                     if (runtime_exec_code[iter].Substring(0, 4) == "loop")
                     {
+                        string old_rtexc = runtime_exec_code[iter];
+                        runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
+
                         loop_start = iter;
                         loop_iter = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
                         loop_cmds = int.Parse(runtime_exec_code[iter].Split(" ")[2]);
                         loop_curr = loop_cmds;
+                        runtime_exec_code[iter] = old_rtexc;
                     }
                     if (runtime_exec_code[iter].Split("=").Length == 2)
                     {
@@ -226,7 +228,8 @@ namespace CSci_L6_Ase_Comp1To2
                     {
                         string old_rtexc = runtime_exec_code[iter];
                         runtime_exec_code[iter] = ReplaceVarsWithVals(runtime_exec_code[iter], usrVars);
-                        if (runtime_exec_code[iter].Substring(0, 5) == "clear")
+                        if (runtime_exec_code[iter].Substring(0, 2) == "//") { /* comment - do nothing */ }
+                        else if (runtime_exec_code[iter].Substring(0, 5) == "clear")
                         {
                             form.clearActiveShapes();
                         }
@@ -264,9 +267,8 @@ namespace CSci_L6_Ase_Comp1To2
                         }
                         else if (runtime_exec_code[iter].Substring(0, 8) == "triangle")
                         {
-                            string[] vals = runtime_exec_code[iter].Split(" ");
-                            int[] size = new int[] { int.Parse(vals[1]), int.Parse(vals[2]) };
-                            form.curCmd = "t/" + form.coords[0] + "/" + form.coords[1] + "/" + size[0] + "/" + size[1] + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
+                            int size = int.Parse(runtime_exec_code[iter].Split(" ")[1]);
+                            form.curCmd = "t/" + form.coords[0] + "/" + form.coords[1] + "/" + size + "/" + entityCount + "/" + fill + "/" + br.Color.R + "/" + br.Color.G + "/" + br.Color.B;
                         }
                         else if (runtime_exec_code[iter].Substring(0, 3) == "pen")
                         {
@@ -282,8 +284,8 @@ namespace CSci_L6_Ase_Comp1To2
                             {
                                 br.Color = Color.FromArgb(255, int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3]));
                             }
-                            runtime_exec_code[iter] = old_rtexc;
                         }
+                        runtime_exec_code[iter] = old_rtexc;
                     }
                     if (loop_curr == 0)
                     {
@@ -389,7 +391,7 @@ namespace CSci_L6_Ase_Comp1To2
                 if (!string.IsNullOrEmpty(program[x]))
                 {
                     string[] tempString = program[x].Split(" ");
-                    tempString[0] = tempString[0] + "________________";
+                    tempString[0] = tempString[0] + "________________"; // prevent breakage
                     program[x] = "";
                     for (int y = 0; y < tempString.Length; y++)
                     {
